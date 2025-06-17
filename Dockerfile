@@ -14,8 +14,8 @@
 
 FROM scratch
 LABEL AUTHOR="marcos AT unitron DOT com DOT br"
-ADD main /
-CMD ["/main"]
+ADD go-helloword-http /
+CMD ["/go-helloword-http"]
 
 # this is how you test it:
 # docker run  -p 8080:8080 89bbcbfccc03
