@@ -8,5 +8,5 @@ It does have some interesting features, which are provided as environmental vari
 * FREEZE_PERCENTAGE (Float between 0 and 100): A chance the server will freeze and NEVER bind to HTTP_PORT. The console output will inform you that. This parameter is evaulated on startup, before START_DELAY so by looking at the logs you will immediatelly know if the server will work or not. Default value is zero, which means is does not freeze.
 
 # URLs
-Docker: https://hub.docker.com/r/marcosdiez/helloworld-http
-GitHub: https://github.com/marcosdiez/go-helloword-http
+* Docker: https://hub.docker.com/r/marcosdiez/helloworld-http
+* GitHub: https://github.com/marcosdiez/go-helloword-http
