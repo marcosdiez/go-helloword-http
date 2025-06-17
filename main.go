@@ -15,13 +15,21 @@ import (
 
 const (
 	version = "v1.0.0"
+	http_port = 8080
 )
 
 func main() {
-	log.Println("Starting helloworld application...")
+	log.Println("Starting helloworld application. Listening on port ", http_port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello universe!\n")
+		log.Println("Request received from ", r.RemoteAddr , " or maybe " , r.Header.Get("X-Forwarded-For") )
+		name, err := os.Hostname()
+		if err != nil {
+			fmt.Fprintf(w, fmt.Sprintf("HTTP ERROR: %v\n", err))
+		}else{
+			fmt.Fprintf(w, "Hello universe from [" +  name + "]\n")
+		}
+		// fmt.Fprintf(w, "Hello universe 2\n") // from [" +  name + "]\n")
 	})
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +40,7 @@ func main() {
 		fmt.Fprintf(w, version)
 	})
 
-	s := http.Server{Addr: ":80"}
+	s := http.Server{Addr: fmt.Sprintf(":%v", http_port )}
 	go func() {
 		log.Fatal(s.ListenAndServe())
 	}()
