@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	version               = "v1.0.1"
+	version               = "v1.0.2"
 	default_http_port     = 8080
 	FREEZE_PERCENTAGE_ENV = "FREEZE_PERCENTAGE"
 )
