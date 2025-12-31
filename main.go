@@ -36,6 +36,20 @@ func getHttpPort() int {
 	return http_port
 }
 
+func getSecondaryHttpPort() int {
+	port_str, exists := os.LookupEnv("SECONDARY_HTTP_PORT")
+	if !exists {
+		return 0
+	}
+
+	http_port, err := strconv.Atoi(port_str)
+	if err != nil {
+		log.Printf("Error converting [%s] to string: [%s]. We will not listen to a seconday port.\n", port_str, err)
+		return 0
+	}
+	return http_port
+}
+
 func delayStartIfNeeded() {
 	delay_start_str, exists := os.LookupEnv("START_DELAY")
 	if !exists {
@@ -101,11 +115,19 @@ func main() {
 	http.HandleFunc("/version", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, version)
 	})
-
 	s := http.Server{Addr: fmt.Sprintf(":%v", http_port)}
 	go func() {
 		log.Fatal(s.ListenAndServe())
 	}()
+
+	seconday_http_port := getSecondaryHttpPort()
+	if seconday_http_port != 0 {
+		log.Printf("Also listening to the secondary HTTP port %d\n", seconday_http_port)
+		s2 := http.Server{Addr: fmt.Sprintf(":%v", seconday_http_port)}
+		go func() {
+			log.Fatal(s2.ListenAndServe())
+		}()
+	}
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
