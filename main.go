@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	version               = "v1.0.2"
+	version               = "v1.0.3"
 	default_http_port     = 8080
 	FREEZE_PERCENTAGE_ENV = "FREEZE_PERCENTAGE"
 )
@@ -92,19 +92,30 @@ func statisticallyFreeze() {
 }
 
 func main() {
+	message, _ := os.LookupEnv("MESSAGE")
 	http_port := getHttpPort()
-	log.Printf("Starting HTTP helloworld %s application. It will listen on port %d", version, http_port)
+	log.Printf("[%s] Starting HTTP helloworld %s application. It will listen on port %d", message, version, http_port)
 	statisticallyFreeze()
 	delayStartIfNeeded()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-		log.Println("Request ["+r.URL.Path+"] received from ", r.RemoteAddr, " or maybe ", r.Header.Get("X-Forwarded-For"))
-		name, err := os.Hostname()
-		if err != nil {
-			fmt.Fprintf(w, fmt.Sprintf("HTTP ERROR: %v\n", err))
-		} else {
-			fmt.Fprintf(w, "Hello ["+r.URL.Path+"] from ["+name+"] "+version+"\n")
-		}
+		hostname, _ := os.Hostname()
+
+		msg := fmt.Sprintf("[%s] Request [%s] being served by [%s] version [%s] from [%s] or [%s]",
+			message, r.URL.Path,
+			hostname, version,
+			r.RemoteAddr, r.Header.Get("X-Forwarded-For"))
+
+		log.Println(msg)
+		fmt.Println(w, msg)
+
+		// log.Println("[" + message + "] Request ["+r.URL.Path+"] received from ", r.RemoteAddr, " or maybe ", r.Header.Get("X-Forwarded-For"))
+		// name, err := os.Hostname()
+		// if err != nil {
+		// 	fmt.Fprintf(w, fmt.Sprintf("HTTP ERROR: %v\n", err))
+		// } else {
+		// 	fmt.Fprintf(w, "[" + message + "] Hello ["+r.URL.Path+"] from ["+name+"] "+version+"\n")
+		// }
 		// fmt.Fprintf(w, "Hello universe 2\n") // from [" +  name + "]\n")
 	})
 
