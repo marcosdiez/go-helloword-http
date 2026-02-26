@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	version               = "v1.0.3"
+	version               = "v1.0.4"
 	default_http_port     = 8080
 	FREEZE_PERCENTAGE_ENV = "FREEZE_PERCENTAGE"
 )
@@ -107,7 +107,7 @@ func main() {
 			r.RemoteAddr, r.Header.Get("X-Forwarded-For"))
 
 		log.Println(msg)
-		fmt.Println(w, msg)
+		fmt.Fprintln(w, msg)
 
 		// log.Println("[" + message + "] Request ["+r.URL.Path+"] received from ", r.RemoteAddr, " or maybe ", r.Header.Get("X-Forwarded-For"))
 		// name, err := os.Hostname()
