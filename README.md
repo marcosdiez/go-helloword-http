@@ -9,6 +9,13 @@ It does have some interesting features, which are provided as environmental vari
 * FREEZE_PERCENTAGE (Float between 0 and 100): A chance the server will freeze and NEVER bind to HTTP_PORT. The console output will inform you that. This parameter is evaulated on startup, before START_DELAY so by looking at the logs you will immediatelly know if the server will work or not. Default value is zero, which means is does not freeze.
 * MESSAGE (string): a message that will appear in the log of every request. Default is blank, suggested values: "BLUE" and "GREEN"
 
+Also, if you are in an AWS environment, it prints (on the console logs only) your AWS account name and user ARN
+
+
 # URLs
 * Docker: https://hub.docker.com/r/marcosdiez/helloworld-http
-* GitHub: https://github.com/marcosdiez/go-helloword-http
+* GitHub: https://github.com/marcosdiez/go-helloworld-http
+
+
+go mod init marcosdiez.com/go-helloworld-http/v2
+go mod tidy

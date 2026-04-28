@@ -7,15 +7,15 @@
 
 # EXPOSE 8080
 # LABEL maintainer="marcos AT unitron DOT com DOT br"
-# COPY ./go-helloword-http /app
+# COPY ./go-helloworld-http /app
 # ENTRYPOINT ["/app"]
 # RUN ["/app"]
 
 
 FROM scratch
 LABEL AUTHOR="marcos AT unitron DOT com DOT br"
-ADD go-helloword-http /
-CMD ["/go-helloword-http"]
+ADD go-helloworld-http /
+CMD ["/go-helloworld-http"]
 
 # this is how you test it:
 # docker run  -p 8080:8080 89bbcbfccc03

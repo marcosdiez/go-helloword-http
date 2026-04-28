@@ -14,10 +14,14 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 )
 
 const (
-	version               = "v1.0.4"
+	version               = "v1.0.5"
 	default_http_port     = 8080
 	FREEZE_PERCENTAGE_ENV = "FREEZE_PERCENTAGE"
 )
@@ -91,10 +95,30 @@ func statisticallyFreeze() {
 	}
 }
 
+func aws_sts() {
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ctx := context.TODO()
+	stsClient := sts.NewFromConfig(cfg)
+	identity, err := stsClient.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{})
+	if err != nil {
+		log.Printf("Error trying to get the AWS IAM Role: [%v]\n", err)
+	} else {
+		log.Printf("AWS Account ID: %s", aws.ToString(identity.Account))
+		log.Printf("AWS IAM ARN: %s", aws.ToString(identity.Arn))
+		log.Printf("AWS User ID %s", aws.ToString(identity.UserId))
+	}
+}
+
 func main() {
 	message, _ := os.LookupEnv("MESSAGE")
 	http_port := getHttpPort()
 	log.Printf("[%s] Starting HTTP helloworld %s application. It will listen on port %d", message, version, http_port)
+	aws_sts()
 	statisticallyFreeze()
 	delayStartIfNeeded()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
